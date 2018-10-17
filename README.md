@@ -17,8 +17,8 @@ The course contain project work of 2 credits that are published on this site.
 
 
 _____________________________________________
-*Johan Odelius*, PhD, [(link)](https://www.ltu.se/staff/j/johode) and
-*Christer Stenstrom*, PhD, [(link)](https://www.ltu.se/staff/c/chrste)
+*Johan Odelius*, PhD [(link)](https://www.ltu.se/staff/j/johode) and
+*Christer Stenstrom*, PhD [(link)](https://www.ltu.se/staff/c/chrste)
 
 [Master's programme Maintenance Engineering](https://www.ltu.se/mastermaintenance)
 
