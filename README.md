@@ -3,8 +3,6 @@
 
 Course, bachelor's level, 7.5 Credits [(link)](https://www.ltu.se/edu/course/D00/D0020B/)
 
-Realized through laboratory work and project assignments, the course develop your competence and skills in measurement technologies, the Internet of Things and signal analysis in order to perform condition monitoring for maintenance decision support.
-
 ### Course aim
 The aim of the course is to develop competence and skills for measurement technologies, the Internet of Things and signal analysis in order to perform condition monitoring for maintenance decision support. After the course, the student will 
 - have basic knowledge about the Internet of Things and its implementation,
