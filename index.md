@@ -1,6 +1,6 @@
 ## Internet of Things and Signal Analysis for Condition Monitoring
 
-Course, bachelor's level, 7.5 Credits [Course page] (https://www.ltu.se/edu/course/D00/D0020B/D0020B-Sakernas-internet-och-signalanalys-for-tillstandsovervakning-1.172055?l=en)
+Course, bachelor's level, 7.5 Credits | [Course page](https://www.ltu.se/edu/course/D00/D0020B/)
 
 Realized through laboratory work and project assignments, the course develop your competence and skills in measurement technologies, the Internet of Things and signal analysis in order to perform condition monitoring for maintenance decision support.
 
@@ -15,8 +15,7 @@ The aim of the course is to develop competence and skills for measurement techno
 The course contain project work of 2 credits that are published on this site. 
 
 
-*Johan Odelius*
-Operation and Maintenance
+*Johan Odelius* |
+[Division of Operation and Maintenance](https://www.ltu.se/maintenance) |
+[Master's programme Maintenance Engineering](https://www.ltu.se/mastermaintenance) |
 Luleå University of Technology
-[Division of Operation and Maintenance](https://www.ltu.se/maintenance)
-[Master's programme Maintenance Engineering](https://www.ltu.se/mastermaintenance)
