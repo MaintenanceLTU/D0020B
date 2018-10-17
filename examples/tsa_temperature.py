@@ -17,8 +17,7 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 #%% Read csv data to pandas Dataframe
 # Read timestamp, temperature and windspeed columns from csv-file
 # Add missing values "-" to NaN
-data = pd.read_csv('values_device_weather-station.csv',header=0,sep=',',
-                         usecols=["timestamp","temperature","windspeed"],na_values=["-"])
+data = pd.read_csv('values_device_weather-station.csv',header=0,sep=',',na_values=["-"])
 
 # Convert timestamp from ms to s and add as date index to DataFrame
 data.index = pd.to_datetime(np.float64(data["timestamp"])/1000,unit='s')
