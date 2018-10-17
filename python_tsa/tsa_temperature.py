@@ -43,27 +43,27 @@ feature_data = data.temperature.resample('1H').mean()
 # Interpolate for equally time samples
 feature_data = feature_data.interpolate() 
 
-def plot_rolling(y,window=5,unit=None):
-    rolmean = y.rolling(window=window,center=True).mean()
-    rolstd = y.rolling(window=window,center=True).std()
+def rollinganalysis(y,window=5,center=True,unit=None):
+    rolmean = y.rolling(window=window,center=center).mean()
+    rolstd = y.rolling(window=window,center=center).std()
     plt.figure()
     plt.plot(feature_data, label='Feature values')
     plt.plot(rolmean,label='Rolling mean')
     plt.plot(rolstd,label = 'Rolling std')
     plt.legend(loc='best')
-    plt.title(('Rolling mean and std dev for window %d %s' % (window,unit)))
+    plt.title(('Rolling mean and std dev for window of %d %s' % (window,unit)))
     plt.show()
 
-plot_rolling(feature_data,window=(24*7),unit='hour')
+# Rolling analysis for 1 week window
+rollinganalysis(feature_data,window=(24*7),unit='hour')
 
 ## Using resmaple function
 plt.figure()
-plt.plot()
 plt.plot(data.temperature.resample('1H').mean(), label='1 hour mean')
 plt.plot(data.temperature.resample('1W').mean(),label='1 week mean')
 plt.plot(data.temperature.resample('1W').std(),label = '1 week std')
 plt.legend(loc='best')
-plt.title('Mean and std dev over different time periods')
+plt.title('Mean and std dev resample for different time periods')
 plt.show()  
   
 ## Statistic test for evaluating stationarity
@@ -115,7 +115,7 @@ decomp.plot()
 plt.show()
 
 #%% Residual analysis
-def residual_analysis(data_resid,label='Residuals'): 
+def residualanalysis(data_resid,label='Residuals'): 
     print(label)
     #Augmented Dickey-Fuller unit root test
     result = teststationarity(data_resid.values,regression='c')
@@ -135,7 +135,7 @@ def residual_analysis(data_resid,label='Residuals'):
     # Anderson darling test    
     print('Anderson Darling test for normality')
     r = stats.anderson(data_resid)    
-    i = 2
+    i = 2 #significan level of 0.05
     if r.statistic>r.critical_values[i]:
         print('Statistic: %.3f p<%.2f' % (r.statistic,r.significance_level[i]/100))        
         print('Fail to reject H0, data is normal')
@@ -144,9 +144,8 @@ def residual_analysis(data_resid,label='Residuals'):
         print('Can reject H0, data is not normal')
     
     
-residual_analysis(decomp.resid.dropna(),label='Residuals from seasonal decompose')
-residual_analysis(reg_resid,label='Residuals from regression analysis')
-
+residualanalysis(decomp.resid.dropna(),label='Residuals from seasonal decompose')
+residualanalysis(reg_resid,label='Residuals from regression analysis')
 
 #%% Pivot table and correlation analysis
 feature_data = data['temperature'].resample('1h').mean()
