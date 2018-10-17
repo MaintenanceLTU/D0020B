@@ -81,7 +81,7 @@ def teststationarity(values,signlevel=0.05,regression='c'):
 result = teststationarity(feature_data.values,regression='c')
 result = teststationarity(feature_data.values,regression='ct')
 
-#%% Trend analysis using linear regression
+#%% Trend analysis
 # Resample to 24 hour mean, this will remove seasonal effect of day and night
 feature_data = data.temperature.resample('24H').mean()
 # Remove NaN from data
@@ -103,8 +103,21 @@ reg_resid = pd.Series(y-(slope*x+intercept),index=feature_data.index)
 plt.figure()
 plt.plot(x,y,'--*',label='Data')
 plt.plot(x,x*slope+intercept,label='Linear regression model')
-plt.legend(loc='best')
+#plt.legend(loc='best')
 plt.title('Trend analysis')
+#plt.show()
+
+# Least squares using numpy
+X = np.vstack([x, np.ones(len(x))]).T
+res = np.linalg.lstsq(X, y)
+
+# Least squares using statsmodel
+X = np.vstack([x**2, x, np.ones(len(x))]).T #Quadratic model
+results = sm.OLS(y,X).fit()
+print(results.summary())
+
+plt.plot(x,results.fittedvalues,label='Least square quadratic model')
+plt.legend(loc='best')
 plt.show()
 
 #%% Decomposition example
