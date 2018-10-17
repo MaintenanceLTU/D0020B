@@ -1,5 +1,6 @@
 ## Project work
-The objective of the project is to connect the different parts of the course
+### Aim 
+The aim of the project is to connect the different parts of the course
 - Introduction to maintenance
 - Introduction to Inspection and Condition monitoring
     - Measurement methods
@@ -13,6 +14,7 @@ The objective of the project is to connect the different parts of the course
 - Sensor technology and microcontroller
 - Internet of Things
 
+### Online abstract
 The one page abstract shall include
 - Introduction
   - Background to the maintenance problem of interest. 
