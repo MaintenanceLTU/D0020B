@@ -1,37 +1,22 @@
-## Welcome to GitHub Pages
+## Internet of Things and Signal Analysis for Condition Monitoring
 
-You can use the [editor on GitHub](https://github.com/MaintenanceLTU/D0020B/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+Course, bachelor's level, 7.5 Credits [Course page] (https://www.ltu.se/edu/course/D00/D0020B/D0020B-Sakernas-internet-och-signalanalys-for-tillstandsovervakning-1.172055?l=en)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Realized through laboratory work and project assignments, the course develop your competence and skills in measurement technologies, the Internet of Things and signal analysis in order to perform condition monitoring for maintenance decision support.
 
-### Markdown
+### Course aim
+The aim of the course is to develop competence and skills for measurement technologies, the Internet of Things and signal analysis in order to perform condition monitoring for maintenance decision support. After the course, the student will 
+- have basic knowledge about the Internet of Things and its implementation,
+- have basic skills in signal analysis to be able to describe and calculate features in time domain and the frequency content of a signal 
+- have the ability to independently and in group undertake tasks for given the settings, as well as demonstrate the ability to identify knowledge gaps     and bridging these gaps by gaining new knowledge.
+- understand of how Internet of Things can be used for condition monitoring and maintenance decision support.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+### Project work
+The course contain project work of 2 credits that are published on this site. 
 
-```markdown
-Syntax highlighted code block
 
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/MaintenanceLTU/D0020B/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+*Johan Odelius*
+Operation and Maintenance
+Luleå University of Technology
+[Division of Operation and Maintenance](https://www.ltu.se/maintenance)
+[Master's programme Maintenance Engineering](https://www.ltu.se/mastermaintenance)
