@@ -1,7 +1,7 @@
 # D0020B
 ## Internet of Things and Signal Analysis for Condition Monitoring
 
-Course, bachelor's level, 7.5 Credits 
+Course, bachelor's level, 7.5 Credits [(link)](https://www.ltu.se/edu/course/D00/D0020B/)
 
 Realized through laboratory work and project assignments, the course develop your competence and skills in measurement technologies, the Internet of Things and signal analysis in order to perform condition monitoring for maintenance decision support.
 
@@ -15,12 +15,10 @@ The aim of the course is to develop competence and skills for measurement techno
 ### Project work
 The course contain project work of 2 credits that are published on this site. 
 
-[Course page](https://www.ltu.se/edu/course/D00/D0020B/)
-
 
 _____________________________________________
-*Johan Odelius*, PhD, [Link](https://www.ltu.se/staff/j/johode) and
-*Christer Stenstrom*, PhD, [Link](https://www.ltu.se/staff/c/chrste)
+*Johan Odelius*, PhD, [(link)](https://www.ltu.se/staff/j/johode) and
+*Christer Stenstrom*, PhD, [(link)](https://www.ltu.se/staff/c/chrste)
 
 [Master's programme Maintenance Engineering](https://www.ltu.se/mastermaintenance)
 
