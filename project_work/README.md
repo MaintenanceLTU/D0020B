@@ -1,4 +1,4 @@
-** Project work
+## Project work
 The objective of the project is to connect the different parts of the course
 - Introduction to maintenance
 - Introduction to Inspection and Condition monitoring
