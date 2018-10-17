@@ -19,10 +19,13 @@ The course contain project work of 2 credits that are published on this site.
 
 
 _____________________________________________
-*Johan Odelius*, PhD, Senior Lecturer [Link](https://www.ltu.se/staff/j/johode)
+*Johan Odelius*, PhD, [Link](https://www.ltu.se/staff/j/johode) and
+*Christer Stenstrom*, PhD, [Link](https://www.ltu.se/staff/c/chrste)
 
 [Master's programme Maintenance Engineering](https://www.ltu.se/mastermaintenance)
 
 [Division of Operation and Maintenance](https://www.ltu.se/maintenance)
 
 Luleå University of Technology
+
+Sweden
