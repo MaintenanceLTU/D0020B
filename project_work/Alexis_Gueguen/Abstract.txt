@@ -1,6 +1,11 @@
 The Project:
 
-Using the knowledge acquired during this course, I set my mind on monitoring my heating plate for 2 hours: before and after cooking a meal, using a thermal sensor. Since this case is not truly concrete, I will consider my plate to be a machine under stress, and consider it enters fault state once it reaches 100°C or above. The objective is not to judge the accuracy of the measurements, but to ensure that my system can effectively measure the plate’s temperature regularly and upload the data to ThingsSpeak. Also, the code contains a way to notify the user via Twitter should the temperature go over the 100°C threshhold (see code on github). 
+Using the knowledge acquired during this course, I set my mind on monitoring my heating plate for 2 hours: 
+before and after cooking a meal, using a thermal sensor. Since this case is not truly concrete, I will consider
+my plate to be a machine under stress, and consider it enters fault state once it reaches 100°C or above.
+The objective is not to judge the accuracy of the measurements, but to ensure that my system can effectively
+measure the plate’s temperature regularly and upload the data to ThingsSpeak. Also, the code contains a way to
+notify the user via Twitter should the temperature go over the 100°C threshhold (see code on github). 
 
 Materials used:
 - Arduino Uno 
