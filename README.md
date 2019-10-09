@@ -15,9 +15,8 @@ The course contain project work of 2 credits that are published on this site.
 
 
 _____________________________________________
-*Johan Odelius*, PhD [(link)](https://www.ltu.se/staff/j/johode),
-*Taoufik Najeh*, PhD [(link)](https://www.ltu.se/staff/t/taonaj), and
-*Matti Autioniemi*, Lapland University of Applied Science, Finland [(link)](https://www.lapinamk.fi)
+*Johan Odelius*, PhD [(link)](https://www.ltu.se/staff/j/johode) and 
+*Taoufik Najeh*, PhD [(link)](https://www.ltu.se/staff/t/taonaj)
 
 [Master's programme Maintenance Engineering](https://www.ltu.se/mastermaintenance)
 
