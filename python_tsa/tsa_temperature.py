@@ -10,6 +10,7 @@ from datetime import datetime
 from scipy import stats
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.seasonal import seasonal_decompose
+import statsmodels.api as sm
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -89,6 +90,30 @@ feature_data = feature_data.dropna()
 y = feature_data.values
 # Create time signal in days
 x = np.cumsum(np.append(0,np.float64(np.diff(feature_data.index))/(1e9*60*60*24)))
+
+# Least square fit
+n = len(x)
+X = np.vstack([np.ones(n), x]).T
+param = np.matmul(np.linalg.inv(np.matmul(X.T,X)),np.matmul(X.T,y)) # Model parameters
+
+yhat = np.matmul(X,param) # Estimated values
+
+# Goodness of fit
+SStot = sum((y-np.mean(y))**2)
+SSres = sum((y-yhat)**2)
+Rsq = 1-SSres/SStot
+
+df = n-2
+# F-stat
+SSreg = sum((yhat-np.mean(y))**2)
+FStat = SSreg/(SSres/df)
+pF = 1-stats.f.cdf(FStat,1,df)
+
+# t-stat
+SSx = sum((x-np.mean(x))**2)
+SE = np.array([np.sqrt(SSres/df*(1/n+np.mean(x)**2/SSx)),np.sqrt(SSres/df/SSx)])
+tStat = (param-np.array([0,0]))/SE
+p = (1-stats.t.cdf(tStat,df))*2
 
 # Linear regression
 slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
