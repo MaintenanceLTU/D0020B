@@ -3,11 +3,14 @@ import json
 import ibmiotf.device
 
 # accelerometer data
+import sys
+sys.path.append('/home/pi/Documents/D0020B/lab_vibration')
 import LIS33HH
 
 # datetime import
 from datetime import datetime
 import ntplib
+from time import sleep
 
 # SETUP parameters for accelero
 LIS33HH.power("normal")
@@ -44,11 +47,16 @@ def timestamp(timespec= 'milliseconds', ntp=True) :
     return  t.isoformat(timespec=timespec)
 
 # gets le data
+while True:
+    package = {
+        'ts' : timestamp() ,
+        'accelero' : LIS33HH.get_res("all")
+    }
 
-{'X': 0.7437744140625, 'Y': 0.6207275390625, 'Z': 0.4683837890625}
-
-package = {
-    'ts' : timestamp() ,
-    'accelero' {
-        
- LIS33HH.get_res("all")
+    #publish data
+    client.publishEvent('data', 'json', package)
+    
+    sleep(1)
+    
+#disconnect
+client.disconnect()
