@@ -19,8 +19,8 @@ with Lepton3("/dev/spidev0.1") as l:
     thermal_image,_ = l.capture()
     
 n = thermal_image.shape[0]-np.prod(Image_Pixels)
-#thermal_image_matrix = np.random.randint(0, high=8191, size=(60,80)) 
-thermal_image_matrix = np.reshape(thermal_image[n:],Image_Pixels)
+thermal_image_matrix = np.random.randint(0, high=8191, size=(60,80)) 
+#thermal_image_matrix = np.reshape(thermal_image[n:],Image_Pixels)
 
 temperature_matrix = (0.026*(thermal_image_matrix - [8192])) + ambient_temperature
 
