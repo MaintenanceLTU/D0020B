@@ -47,16 +47,17 @@ def timestamp(timespec= 'milliseconds', ntp=True) :
     return  t.isoformat(timespec=timespec)
 
 # gets le data
-while True:
-    package = {
-        'ts' : timestamp() ,
-        'accelero' : LIS33HH.get_res("all")
-    }
+try:
+    while True:
+        package = {
+            'ts' : timestamp() ,
+            'accelero' : LIS33HH.get_res("all")
+        }
 
-    #publish data
-    client.publishEvent('data', 'json', package)
-    
-    sleep(1)
-    
-#disconnect
-client.disconnect()
+        #publish data
+        client.publishEvent('data', 'json', package)
+        
+        sleep(1)
+except KeyboardInterrupt: 
+    #disconnect
+    client.disconnect()
