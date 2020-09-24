@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import ibmiotf.device
 #%%
 ########Input########
-interval = 10.0   #Sec
+interval = 1.0   #Sec
 
 
 #######Input GPIO pins for MAX31855########

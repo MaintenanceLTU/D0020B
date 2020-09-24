@@ -9,7 +9,7 @@ import numpy as np
 from Lepton3 import Lepton3
 import matplotlib.pyplot as plt
 
-ambient_temperature = 20.3 #
+ambient_temperature = 22.0 #
     
 # Pixel size
 Image_Pixels = [120,160]
