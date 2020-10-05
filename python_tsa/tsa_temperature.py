@@ -10,7 +10,6 @@ from datetime import datetime
 from scipy import stats
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.seasonal import seasonal_decompose
-import statsmodels.api as sm
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -138,10 +137,9 @@ res = np.linalg.lstsq(X, y)
 
 # Least squares using statsmodel
 X = np.vstack([x**2, x, np.ones(len(x))]).T #Quadratic model
-results = sm.OLS(y,X).fit()
-print(results.summary())
+res2 = np.linalg.lstsq(X, y)
 
-plt.plot(x,results.fittedvalues,label='Least square quadratic model')
+plt.plot(x,res2.fittedvalues,label='Least square quadratic model')
 plt.legend(loc='best')
 plt.show()
 
