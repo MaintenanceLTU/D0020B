@@ -47,7 +47,7 @@ def rollinganalysis(y,window=5,center=True,unit=None):
     rolmean = y.rolling(window=window,center=center).mean()
     rolstd = y.rolling(window=window,center=center).std()
     plt.figure()
-    plt.plot(feature_data, label='Feature values')
+    plt.plot(y, label='Feature values')
     plt.plot(rolmean,label='Rolling mean')
     plt.plot(rolstd,label = 'Rolling std')
     plt.legend(loc='best')
@@ -90,7 +90,7 @@ y = feature_data.values
 # Create time signal in days
 x = np.cumsum(np.append(0,np.float64(np.diff(feature_data.index))/(1e9*60*60*24)))
 
-# Least square fit
+# Least square fit (manual way using numpy)
 n = len(x)
 X = np.vstack([np.ones(n), x]).T
 param = np.matmul(np.linalg.inv(np.matmul(X.T,X)),np.matmul(X.T,y)) # Model parameters
@@ -114,7 +114,7 @@ SE = np.array([np.sqrt(SSres/df*(1/n+np.mean(x)**2/SSx)),np.sqrt(SSres/df/SSx)])
 tStat = (param-np.array([0,0]))/SE
 p = (1-stats.t.cdf(tStat,df))*2
 
-# Linear regression
+# Linear regression (using scipy stats library)
 slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
 
 print("Slope of the trend is %0.2f hours (p=%0.3f)" % (slope, p_value))
@@ -139,7 +139,7 @@ res = np.linalg.lstsq(X, y)
 X = np.vstack([x**2, x, np.ones(len(x))]).T #Quadratic model
 res2 = np.linalg.lstsq(X, y)
 
-plt.plot(x,res2.fittedvalues,label='Least square quadratic model')
+plt.plot(x,np.matmul(X,res2[0]),label='Least square quadratic model')
 plt.legend(loc='best')
 plt.show()
 
@@ -182,6 +182,7 @@ def residualanalysis(data_resid,label='Residuals'):
     
 residualanalysis(decomp.resid.dropna(),label='Residuals from seasonal decompose')
 residualanalysis(reg_resid,label='Residuals from regression analysis')
+
 
 #%% Pivot table and correlation analysis
 feature_data = data['temperature'].resample('1h').mean()
