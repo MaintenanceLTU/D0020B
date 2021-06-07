@@ -33,6 +33,7 @@ client.connect()
 
 #
 from datetime import datetime
+from time import sleep
 #t = datetime.utcnow()
 
 #Return POSIX timestamp from datetime object
@@ -81,8 +82,6 @@ import ntplib
 
 
 #Define Timestamp function
-#
-#
 def timestamp(timespec = 'milliseconds', ntp=True):
     if ntp:
         response = ntpclient.request('europe.pool.ntp.org', version = 3)
@@ -94,15 +93,20 @@ def timestamp(timespec = 'milliseconds', ntp=True):
 # Data acqustion
 
 # Example pkg (to be replaced with your code)
-pkg = {
+
+try: 
+    while True:
+        pkg = {
             'ts' : timestamp() ,
             'accelero' : LIS33HH.get_res("all")
     }
 
+    
 # publish data
-client.publishEvent('data', 'json', pkg)
-
+        client.publishEvent('data', 'json', pkg)
+        sleep(1)
+    
+except KeyboardInterrupt:     
 # disconnect to client
-client.disconnect()
-
-
+    client.disconnect()
+    
