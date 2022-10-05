@@ -10,6 +10,7 @@ from datetime import datetime
 from scipy import stats
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.seasonal import seasonal_decompose
+import statsmodels.api as sm
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -17,14 +18,14 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 #%% Read csv data to pandas Dataframe
 # Read timestamp, temperature and windspeed columns from csv-file
 # Add missing values "-" to NaN
-data = pd.read_csv('values_device_weather-station.csv',header=0,sep=',',na_values=["-"])
+data = pd.read_csv('values_device_weather-station.csv',header=0,sep=',',na_values=['-'])
 
 # Convert timestamp from ms to s and add as date index to DataFrame
 data.index = pd.to_datetime(np.float64(data["timestamp"])/1000,unit='s')
 
 #%% Plot temperature data
 plt.figure()
-plt.plot(data.temperature)
+data['temperature'].plot()
 plt.title('Temperature measurement data')
 plt.ylabel('Degree Celsius (°C)')
 plt.show()
@@ -33,7 +34,6 @@ plt.show()
 print(data[['temperature','windspeed']].describe())
 
 data[['temperature','windspeed']].hist()
-plt.show()
 
 #%% Examine stationarity using rolling mean and std
 # resample the data to 1 hour mean value
@@ -59,9 +59,9 @@ rollinganalysis(feature_data,window=(24*7),unit='hour')
 
 ## Using resmaple function
 plt.figure()
-plt.plot(data.temperature.resample('1H').mean(), label='1 hour mean')
-plt.plot(data.temperature.resample('1W').mean(),label='1 week mean')
-plt.plot(data.temperature.resample('1W').std(),label = '1 week std')
+data.temperature.resample('1H').mean().dropna().plot(label='1 hour mean')
+data.temperature.resample('1W').mean().plot(label='1 week mean')
+data.temperature.resample('1W').std().plot(label = '1 week std')
 plt.legend(loc='best')
 plt.title('Mean and std dev resample for different time periods')
 plt.show()  
@@ -84,22 +84,27 @@ result = teststationarity(feature_data.values,regression='ct')
 #%% Trend analysis
 # Resample to 24 hour mean, this will remove seasonal effect of day and night
 feature_data = data.temperature.resample('24H').mean()
+
 # Remove NaN from data
 feature_data = feature_data.dropna()
+
+# Extract values from series
 y = feature_data.values
 # Create time signal in days
-x = np.cumsum(np.append(0,np.float64(np.diff(feature_data.index))/(1e9*60*60*24)))
+t = feature_data.index
+x = (t-t[0])//np.timedelta64(1,'D')
 
-# Least square fit (manual way using numpy)
+# Least square fit (matrix implementation using numpy)
 n = len(x)
 X = np.vstack([np.ones(n), x]).T
 param = np.matmul(np.linalg.inv(np.matmul(X.T,X)),np.matmul(X.T,y)) # Model parameters
 
 yhat = np.matmul(X,param) # Estimated values
+r = y-yhat # Residuals
 
 # Goodness of fit
 SStot = sum((y-np.mean(y))**2)
-SSres = sum((y-yhat)**2)
+SSres = sum(r**2)
 Rsq = 1-SSres/SStot
 
 df = n-2
@@ -112,36 +117,74 @@ pF = 1-stats.f.cdf(FStat,1,df)
 SSx = sum((x-np.mean(x))**2)
 SE = np.array([np.sqrt(SSres/df*(1/n+np.mean(x)**2/SSx)),np.sqrt(SSres/df/SSx)])
 tStat = (param-np.array([0,0]))/SE
-p = (1-stats.t.cdf(tStat,df))*2
+p = (1-stats.t.cdf(abs(tStat),df))*2
+
+print('--- Least square fit and regression analysis  -----')
+print('Estimated parameters: [%.1f,%.2f]' % tuple(param))
+print('F-statistics: %.1f (p=%.3f)' % (FStat, pF))
+print('Slope of the trend is %.2f deg/days (p=%.3f)' % (param[1], p[1]))
+print('Goodness of fit: R2=%.3f' % (Rsq))
+print('---------------------------------------------------')
+
+
+# Least squares using numpy (equal to scipy.linalg.lstsq)
+X = np.vstack([x, np.ones(len(x))]).T
+coef, resid,_,_ = np.linalg.lstsq(X, y)
+
+# Plot
+# New figure with two subplots
+fig, (ax1, ax2) = plt.subplots(2,1)
+# Plot data and model
+ax1.plot(x, y, 'o', label='Data')
+ax1.plot(x, coef[0]*x + coef[1], label='Fitted line')
+ax1.set_title('np.linalg.lstsq')
+ax1.legend(loc='best')
+
+# Plot residuals
+ax2.plot(x, r, '*', label='Residuals')
+ax2.set_title('Residuals')
+
 
 # Linear regression (using scipy stats library)
 slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
 
-print("Slope of the trend is %0.2f hours (p=%0.3f)" % (slope, p_value))
-print("Goodness of fit: R2=%0.3f and StdError=%0.3f" % (r_value**2, std_err))
+print('--------- scipy stats linear regression -----------')
+print('Slope of the trend is %0.2f deg/days (p=%0.3f)' % (slope, p_value))
+print('Goodness of fit: R2=%0.3f and StdError=%0.3f' % (r_value**2, std_err))
+print('---------------------------------------------------')
 
-# define residuals
+# compute residuals
 reg_resid = pd.Series(y-(slope*x+intercept),index=feature_data.index)
 
 #Plot
-plt.figure()
-plt.plot(x,y,'--*',label='Data')
-plt.plot(x,x*slope+intercept,label='Linear regression model')
-#plt.legend(loc='best')
-plt.title('Trend analysis')
-#plt.show()
+# New figure with two subplots
+fig, (ax1, ax2) = plt.subplots(2,1)
+# Plot data and model
+ax1.plot(x,y,'o', label='Data')
+ax1.plot(x,x*slope+intercept,label='Linear regression model')
+ax1.set_title('stats.linregress')
+ax1.legend(loc='best')
+# Plot residuals
+ax2.plot(x, reg_resid, '*', label='Residuals')
+ax2.set_title('Residuals')
 
-# Least squares using numpy
+# Regression using statsmodel OLS (Fit a linear model using Ordinary Least Squares)
 X = np.vstack([x, np.ones(len(x))]).T
-res = np.linalg.lstsq(X, y)
+results = sm.OLS(y,X).fit()
+print(results.summary())
 
-# Least squares using statsmodel
-X = np.vstack([x**2, x, np.ones(len(x))]).T #Quadratic model
-res2 = np.linalg.lstsq(X, y)
+# Plot
+# New figure with two subplots
+fig, (ax1, ax2) = plt.subplots(2,1)
+# Plot data and model
+ax1.plot(x,y, 'o', label='Data')
+ax1.plot(x, results.fittedvalues,label='Linear regression model')
+ax1.set_title('statsmodels OLS')
+ax1.legend(loc='best')
+# Plot residuals
+ax2.plot(x, results.resid, '*', label='Residuals')
+ax2.set_title('Residuals')
 
-plt.plot(x,np.matmul(X,res2[0]),label='Least square quadratic model')
-plt.legend(loc='best')
-plt.show()
 
 #%% Decomposition example
 feature_data = data['temperature'].resample('1H').mean()
@@ -154,17 +197,18 @@ plt.show()
 def residualanalysis(data_resid,label='Residuals'): 
     print(label)
     #Augmented Dickey-Fuller unit root test
-    result = teststationarity(data_resid.values,regression='c')
+    _ = teststationarity(data_resid.values,regression='c')
     
+    # Plot residuals    
     fig=plt.figure() 
     ax = fig.add_subplot(211)
     ax.plot(data_resid)
     plt.title(label)
                
-    
+    # Plot normal prob plot
     ax = fig.add_subplot(212)
-    res=stats.probplot(data_resid.values,plot=ax)    
-    plt.show()
+    _ = stats.probplot(data_resid.values,plot=ax)    
+    # plt.show()
        
     #k2,p=stats.normaltest(data_resid)
     
@@ -180,24 +224,6 @@ def residualanalysis(data_resid,label='Residuals'):
         print('Can reject H0, data is not normal')
     
     
-residualanalysis(decomp.resid.dropna(),label='Residuals from seasonal decompose')
+# residualanalysis(decomp.resid.dropna(),label='Residuals from seasonal decompose')
 residualanalysis(reg_resid,label='Residuals from regression analysis')
 
-
-#%% Pivot table and correlation analysis
-feature_data = data['temperature'].resample('1h').mean()
-feature_data = pd.DataFrame(feature_data.interpolate())
-
-data_hour = list()
-data_day = list()
-d = 0
-for t in feature_data.index:
-    data_hour.append(t.hour)
-    if t.hour==0:
-        d+=1
-    data_day.append(d)
-
-feature_data['hour'] = np.array(data_hour)
-feature_data['day'] = np.array(data_day)
-data_piv = feature_data.pivot(index='day', columns='hour', values='temperature')        
-data_corr = data_piv.corr()
