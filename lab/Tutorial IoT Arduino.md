@@ -1,4 +1,4 @@
-# IoT Lab Part II - Tutorial Arduino + HiveMQ Cloud + Node-RED
+# IoT Lab - Tutorial Arduino + HiveMQ Cloud + Node-RED
 *Johan Odelius, Operation and Maintenance, Luleå University of Technology, Sweden*  
 
 ## Hardware and Software Setup
@@ -102,8 +102,8 @@ void loop() {
 }
 ```
 ### Notes for ESP32 / UNO WiFi Rev2
- - ESP32: use #include <WiFi.h> and WiFiClientSecure net; instead of WiFiNINA/WiFiSSLClient. Keep ArduinoMqttClient the same. Use net.setInsecure(); the same way.
- - UNO WiFi Rev2: RAM is tighter. Keep DynamicJsonDocument doc(128); and payload small.
+ - ESP32: use `#include <WiFi.h>` and `WiFiClientSecure net;` instead of WiFiNINA/WiFiSSLClient. Keep `ArduinoMqttClient` the same. Use `net.setInsecure();` the same way.
+ - UNO WiFi Rev2: RAM is tighter. Keep `DynamicJsonDocument doc(128);` and payload small.
 
 # Node-RED
 ## Open the editor
