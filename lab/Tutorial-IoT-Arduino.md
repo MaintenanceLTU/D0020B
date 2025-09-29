@@ -17,6 +17,7 @@ Install these libraries from the Arduino IDE Library Manager:
 ---
 ## Broker info (provided in class / Canvas)
    - **Application name** 
+   - **IBM cloud subdomain**
    - **Cluster hostname** (e.g. `xxxxxx.s1.eu.hivemq.cloud`)  
    - **Port**: 8883 (TLS)  
    - **Username and password**
@@ -194,9 +195,14 @@ Open your Node-RED editor, e.g. `https://<your-nodered-app>.<your-ibmcloud-subdo
     doc["d"]["distance"]["v"] = distance;
     ```
 
-4. (Optional) Use `NTPClient` to set an accurate timestamp in your MQTT package.
+4. (Optional) Add an accurate timestamp to your MQTT payload:     
+   - Use [`NTPClient`](https://github.com/arduino-libraries/NTPClient) to sync with an NTP server.  
+   - On **ESP32**, you can use the built-in `configTime()` instead of an extra library.  
+   - With extra hardware, you can use a Real-Time Clock (RTC) module (e.g. DS3231).  
+
 
 ## Node-RED
+### (Optional) Add dashboard chart
 1. Drag a new **function** node onto the workspace and double-click it.
    - (Optional) Set the name.
    - Paste this code:
