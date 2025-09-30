@@ -58,7 +58,7 @@ void connectWifi() {
   if (WiFi.status() == WL_CONNECTED) return;
   WiFi.begin(WIFI_SSID, WIFI_PASS);
   while (WiFi.status() != WL_CONNECTED) delay(300);
-  net.setInsecure(); // classroom shortcut (no CA file)
+  // net.setInsecure();
 }
 
 void connectMqtt() {
