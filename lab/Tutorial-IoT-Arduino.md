@@ -24,7 +24,7 @@ Install these libraries from the Arduino IDE Library Manager:
 ---
 
 ## 3. Arduino Code
-### Example sketch Arduino MKR WiFi 1010 (WiFiNINA)
+### Example sketch (WiFiNINA)
 ```cpp
 #include <WiFiNINA.h>
 #include <WiFiSSLClient.h>
@@ -41,6 +41,7 @@ const char* MQTT_USER = "YOUR_USER";
 const char* MQTT_PASS = "YOUR_PASS";
 
 const char* USERID    = "YOUR_APPID";  // e.g. ltu11
+const char* DEVICEID = "a1"; // or arduino, mkr1010, uno_wifi_rev2
 // -------------
 
 
@@ -56,31 +57,58 @@ String tMeta      = baseTopic + "meta";        // optional
 
 void connectWifi() {
   if (WiFi.status() == WL_CONNECTED) return;
+
+  Serial.print(F("[WiFi] Connecting to "));
+  Serial.print(WIFI_SSID);
+  Serial.println(F(" ..."));
+
   WiFi.begin(WIFI_SSID, WIFI_PASS);
-  while (WiFi.status() != WL_CONNECTED) delay(300);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(300);
+    Serial.print('.');
+  }  
+
+  Serial.println();
+  Serial.print(F("[WiFi] Connected. IP="));
+  Serial.println(WiFi.localIP());
+
+  // Uncomment for ESP32 using WiFiClientSecure (TLS test only)
   // net.setInsecure();
 }
 
 void connectMqtt() {
   if (mqtt.connected()) return;
 
-  mqtt.setId("mkr1010-" + String(millis()));
+  mqtt.setId(USERID); //e.g. ltu11
+  // or, if you use more than one device:
+  // mqtt.setId(USERID + "-" + DEVICEID); //e.g. ltu11-a1 (keep short for uno boards)
   mqtt.setUsernamePassword(MQTT_USER, MQTT_PASS);
+  mqtt.setKeepAliveInterval(30);    // seconds
+  mqtt.setConnectionTimeout(15000); // ms
 
   // Connect (blocking retry loop kept simple for class)
-  while (!mqtt.connect(MQTT_HOST, MQTT_PORT)) { delay(1000); }
+  Serial.print(F("[MQTT] Connecting ..."));
+  while (!mqtt.connect(MQTT_HOST, MQTT_PORT)) { 
+    Serial.print('.');
+    delay(1000); 
+  }
+  Serial.println(F(" OK"));
 
   // Optional meta/status
-  mqtt.beginMessage(tMeta);
-  mqtt.print("{\"device\":\"mkr1010\"}");
+  mqtt.beginMessage(tMeta.c_str());
+  mqtt.print(F("{\"device\":\""));
+  mqtt.print(DEVICEID);
+  mqtt.print(F("\"}"));
   mqtt.endMessage();
 
-  mqtt.beginMessage(tStatus);
-  mqtt.print("{\"online\":true}");
+  mqtt.beginMessage(tStatus.c_str());
+  mqtt.print(F("{\"online\":true}"));
   mqtt.endMessage();
 }
 
 void setup() {
+  Serial.begin(115200);
+
   connectWifi();
   connectMqtt();
 }
@@ -95,16 +123,25 @@ void loop() {
   doc["d"]["distance"]["v"] = 123.4;    // <--- replace with your real value
 
   // Publish (stream JSON directly; no buffers needed)
-  mqtt.beginMessage(tTelemetry);
+  mqtt.beginMessage(tTelemetry.c_str());
   serializeJson(doc, mqtt);
   mqtt.endMessage();
 
   delay(2000);
 }
 ```
-### Notes for ESP32 / UNO WiFi Rev2
- - ESP32: use `#include <WiFi.h>` and `WiFiClientSecure net;` instead of WiFiNINA/WiFiSSLClient. Keep `ArduinoMqttClient` the same. Use `net.setInsecure();` the same way.
- - UNO WiFi Rev2: RAM is tighter. Keep `DynamicJsonDocument doc(128);` and payload small.
+### Notes
+ - **Nano 33 IoT / MKR WiFi 1010 (NINA-W102, SAMD)**
+  - Use the sketch above.
+ - **UNO WiFi Rev2**:
+  - Keep client IDs short and use `StaticJsonDocument<128> doc;`
+  - (optional) Update firmware: Select **Tools** → **WiFi101 / WiFiNINA Firmware Updater**:
+    - Select your **UNO WiFi Rev2 port**.
+    - **Update Firmware** to latest offered for your board.
+ - **Nano ESP32**: 
+  - Use `#include <WiFi.h>` and `WiFiClientSecure net;` instead of WiFiNINA/WiFiSSLClient. 
+  - Uncomment and use `net.setInsecure();`.
+  - Keep `ArduinoMqttClient` the same. 
 
 # Node-RED
 ## Open the editor
@@ -117,14 +154,17 @@ Open your Node-RED editor, e.g. `https://<your-nodered-app>.<your-ibmcloud-subdo
     - **Server**: YOUR_CLUSTER.s1.<region>.hivemq.cloud (your cluster host)
     - **Port**: 8883    
     - **Enable secure (TLS)**: ON
-    - **Client ID**: (leave empty)
-    - **Username / Password**: (your recieved credentials)
+    - **Client ID**: Set to <USERID>-nodered, e.g. ltu11-nodered.
+    - **Username / Password**: (your received credentials)
 4. TLS configuration (drop-down → Add new tls-config → pencil):
     - **Server name (SNI)**: YOUR_CLUSTER.s1.<region>.hivemq.cloud
     - Leave **CA certificate / Client cert / Key** empty
     - Keep Verify server certificate enabled
     - Click **Add** (to save the TLS config)
 5. Back in the broker dialog, ensure your TLS config is selected → **Add** (or **Update**).
+6. Set **Output** to a parsed JSON object
+7. (optinal) Set **Name**
+8. Click **Done**
 
 ## Subscribe & view messages
   - Set the **Topic** in the **mqtt in** node to YOUR_STUDENT_APPID/# (e.g. ltu11/#)    
@@ -163,6 +203,9 @@ Open your Node-RED editor, e.g. `https://<your-nodered-app>.<your-ibmcloud-subdo
 
 ## Wiring (HC-SR04 → Arduino)
  - See previous lab or the Documents tab in https://www.sparkfun.com/products/13959
+
+## Notes
+ - Check your HC-SR04 sensor type: many modules require 5 V for power and produce 5 V signals on the echo pin. Make sure your Arduino board can handle 5 V logic safely, or use a voltage divider/level shifter if needed.
 ---
 
 ## Arduino Code
@@ -214,8 +257,6 @@ Open your Node-RED editor, e.g. `https://<your-nodered-app>.<your-ibmcloud-subdo
      return { timestamp: msg.payload.ts, payload: msg.payload.d.distance.v, topic: "Distance" };
    ```
   
-
-
 
 2. Add a **ui_chart** (Dashboard → Chart).
    - Setup a dashboard tab and group
