@@ -205,11 +205,17 @@ Open your Node-RED editor, e.g. `https://<your-nodered-app>.<your-ibmcloud-subdo
 ### (Optional) Add dashboard chart
 1. Drag a new **function** node onto the workspace and double-click it.
    - (Optional) Set the name.
-   - Paste this code:
-     ```js
-     return { payload: { ts: msg.payload.ts, value: msg.payload.d.distance.v } };
-     ```
-   - Click **Done**
+   - Paste this code and click **Done**:
+   ```js
+     return { payload: msg.payload.d.distance.v };
+   ```
+   - To include timestamp and topic (see also https://github.com/node-red/node-red-dashboard/blob/master/Charts.md)
+   ```js
+     return { timestamp: msg.payload.ts, payload: msg.payload.d.distance.v, topic: "Distance" };
+   ```
+  
+
+
 
 2. Add a **ui_chart** (Dashboard → Chart).
    - Setup a dashboard tab and group
